@@ -44,6 +44,18 @@ loginBtn.addEventListener('click', async () => {
   loginSection.classList.add('hidden');
   appSection.classList.remove('hidden');
   loadItems();
+supabase
+  .channel('grocery-updates')
+  .on(
+    'postgres_changes',
+    { event: '*', schema: 'public', table: 'groceries', filter: `family=eq.${familyId}` },
+    (payload) => {
+      console.log('Change:', payload);
+      loadItems(); // Reload items when something changes
+    }
+  )
+  .subscribe();
+
 });
 
 async function loadItems() {
