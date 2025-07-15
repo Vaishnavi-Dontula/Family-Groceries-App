@@ -49,29 +49,43 @@ loginBtn.addEventListener('click', async () => {
 
   // ✅ Real-time sync
   supabase
-    .channel('grocery-updates')
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'groceries',
-        filter: `family=eq.${familyId}`
-      },
-      (payload) => {
-        console.log('🔔 Real-time update received:', payload);
-        loadItems(); // Refresh UI
+  .channel('grocery-updates')
+  .on(
+    'postgres_changes',
+    {
+      event: '*',
+      schema: 'public',
+      table: 'groceries'
+    },
+    (payload) => {
+      const updatedItem = payload.new;
+      if (updatedItem.family === familyId) {
+        console.log('🔔 Real-time update received for this family:', updatedItem);
+        loadItems();
       }
-    )
-    .subscribe();
+    }
+  )
+  .subscribe();
+
 });
 
 async function loadItems() {
-  groceryList.innerHTML = '';
-  const { data } = await supabase.from('groceries').select('*').eq('family', familyId);
+  groceryList.innerHTML = ''; // Clear existing items
+  const { data, error } = await supabase
+    .from('groceries')
+    .select('*')
+    .eq('family', familyId)
+    .order('id', { ascending: true }); // optional: consistent order
+
+  if (error) {
+    console.error('Error loading items:', error.message);
+    return;
+  }
+
   data?.forEach(item => renderItem(item));
   checkIfAllDone();
 }
+
 
 function renderItem(item) {
   const li = document.createElement('li');
