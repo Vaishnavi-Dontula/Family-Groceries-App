@@ -37,37 +37,44 @@ function launchConfetti() {
   });
 }
 
+// ✅ Single login handler
 loginBtn.addEventListener('click', async () => {
   const family = usernameInput.value.trim().toLowerCase();
   if (!family) return;
   familyId = family;
+
   loginSection.classList.add('hidden');
   appSection.classList.remove('hidden');
   loadItems();
-supabase
-  .channel('grocery-updates')
-  .on(
-    'postgres_changes',
-    { event: '*', schema: 'public', table: 'groceries', filter: `family=eq.${familyId}` },
-    (payload) => {
-      console.log('Change:', payload);
-      loadItems(); // Reload items when something changes
-    }
-  )
-  .subscribe();
 
+  // ✅ Real-time sync
+  supabase
+    .channel('grocery-updates')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'groceries',
+        filter: `family=eq.${familyId}`
+      },
+      (payload) => {
+        console.log('🔔 Real-time update received:', payload);
+        loadItems(); // Refresh UI
+      }
+    )
+    .subscribe();
 });
 
 async function loadItems() {
   groceryList.innerHTML = '';
   const { data } = await supabase.from('groceries').select('*').eq('family', familyId);
-
   data?.forEach(item => renderItem(item));
   checkIfAllDone();
 }
 
 function renderItem(item) {
-  let li = document.createElement('li');
+  const li = document.createElement('li');
   li.id = item.id;
 
   const checkbox = document.createElement('input');
