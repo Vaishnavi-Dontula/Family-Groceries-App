@@ -204,6 +204,7 @@ input[type="checkbox"] {
 li.done span {
   text-decoration: line-through;
   opacity: 0.6;
+  transition: all 0.3s ease;
 }
 
 /* -------- DONE MESSAGE -------- */
