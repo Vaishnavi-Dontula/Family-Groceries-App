@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🛒 Family Grocery List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+  <div class="background-overlay"></div>
+  <div class="container">
+    <header>
+      <h1>🍎 Family Grocery List</h1>
+      <button id="toggleMode" title="Toggle Dark/Light Mode">🌙</button>
+    </header>
+
+    <div id="loginSection">
+      <input type="text" id="usernameInput" placeholder="Enter family name..." />
+      <button id="loginBtn"><i class="ri-login-box-line"></i> Login</button>
+    </div>
+
+    <div id="appSection" class="hidden">
+      <form id="addForm">
+        <input type="text" id="itemInput" placeholder="Add grocery item..." required />
+        <button type="submit"><i class="ri-add-line"></i> Add</button>
+      </form>
+
+      <div class="controls">
+        <button id="markAllDone"><i class="ri-checkbox-circle-line"></i> Mark All Done</button>
+        <button id="clearAll"><i class="ri-delete-bin-6-line"></i> Clear All</button>
+      </div>
+
+      <ul id="groceryList" class="grocery-grid"></ul>
+
+      <div id="allDoneMessage" class="hidden">
+        🎉 All items done! Great job! 🎉
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="supabaseClient.js"></script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
