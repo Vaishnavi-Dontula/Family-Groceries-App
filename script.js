@@ -90,6 +90,7 @@ function renderItem(item) {
 
   checkbox.addEventListener('change', () => {
     supabase.from('groceries').update({ checked: checkbox.checked }).eq('id', item.id);
+    li.classList.toggle('done', checkbox.checked);
     checkIfAllDone();
   });
 
